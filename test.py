@@ -145,39 +145,73 @@ with dai.Device(pipeline) as device:
     counter = 0
     fps = 0
     layer_info_printed = False
+
+    last_img = start_time
+    last_nn = start_time
+
+    frame = None
+    nb_frm = 0
+
     while time.time() < stop_time:
-        in_nn_input = q_nn_input.get()
-        in_nn = q_nn.get()
+        # in_nn_input = q_nn_input.tryGet()
+        # if frame is None:
+        if nb_frm < 2:
+            in_nn_input = q_nn_input.tryGet()
+        else:
+            in_nn_input = None
+        # in_nn_input = None
 
-        frame = in_nn_input.getCvFrame()
+        in_nn = q_nn.tryGet()
+        # in_nn = None
 
-        layers = in_nn.getAllLayers()
+        if in_nn_input is not None:
+            now = time.time()
+            print("img : ", (1.0/(now - last_img)), "   ", now - last_img)
+            last_img = now
+            frame = in_nn_input.getCvFrame()
+            nb_frm += 1
+            print(time.time() - now)
+        # else:
+        #     print("waiting")
 
-        # get the "output" layer
-        output = np.array(in_nn.getLayerFp16("output"))
+        if in_nn is not None:
 
-        # reshape to proper format
-        cols = output.shape[0]//output_shape
-        output = np.reshape(output, (output_shape, cols))
-        output = np.expand_dims(output, axis = 0)
+            now = time.time()
+            print("NN  : ", (1.0/(now - last_nn)), "   ", now - last_nn)
+            last_nn = now
 
-        total_classes = cols - 5
+            
+            layers = in_nn.getAllLayers()
 
-        boxes = non_max_suppression(output, conf_thres=conf_thresh, iou_thres=iou_thresh)
-        boxes = np.array(boxes[0])
+            # get the "output" layer
+            output = np.array(in_nn.getLayerFp16("output"))
 
-        if boxes is not None:
-            frame = draw_boxes(frame, boxes, total_classes)
-        cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, (255, 0, 0))
-        cv2.imshow("nn_input", frame)
+            # reshape to proper format
+            cols = output.shape[0]//output_shape
+            output = np.reshape(output, (output_shape, cols))
+            output = np.expand_dims(output, axis = 0)
 
-        counter += 1
-        if (time.time() - start_time) > 1:
-            fps = counter / (time.time() - start_time)
+            total_classes = cols - 5
 
-            counter = 0
-            start_time = time.time()
+            boxes = non_max_suppression(output, conf_thres=conf_thresh, iou_thres=iou_thresh)
+            boxes = np.array(boxes[0])
+
+            if boxes is not None:
+                frame = draw_boxes(frame, boxes, total_classes)
+            cv2.putText(frame, "NN fps: {:.2f}".format(fps), (2, frame.shape[0] - 4), cv2.FONT_HERSHEY_TRIPLEX, 0.4, (255, 0, 0))
+            cv2.imshow("nn_input", frame)
+
+            counter += 1
+            frame_counter += 1
+            if (time.time() - start_time) > 1:
+                fps = counter / (time.time() - start_time)
+
+                counter = 0
+                start_time = time.time()
 
 
         if cv2.waitKey(1) == ord('q'):
             break
+
+
+print(frame_counter/period)
