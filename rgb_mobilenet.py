@@ -87,7 +87,9 @@ with contextlib.ExitStack() as stack:
         device = stack.enter_context(dai.Device(openvino_version, device_info, usb2_mode))
 
         # if "1844301031096E1200" != device.getMxId():
-        if "184430105179A51200" != device.getMxId():
+        # if "184430105179A51200" != device.getMxId():
+        # if "1844301091776D1200" != device.getMxId():
+        if "18443010E199121300" != device.getMxId():
         # if "1844301041F59F1200" != device.getMxId():
             print("stop", device.getMxId())
             continue
