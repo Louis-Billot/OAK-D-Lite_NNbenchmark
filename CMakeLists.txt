@@ -31,8 +31,8 @@ message( STATUS "Found DepthAI-OpenCV Lib ! " (${DEPTHAI_OPENCV_LIB}))
 
 find_package( OpenCV REQUIRED )
 
-# add_executable(DepthAI_TEST host_decoding/main.cpp)
-add_executable(DepthAI_TEST host_decoding/test.cpp)
+add_executable(DepthAI_TEST host_decoding/main.cpp)
+# add_executable(DepthAI_TEST host_decoding/test.cpp)
 
 target_include_directories(DepthAI_TEST PRIVATE
 	$ENV{DEPTHAI_DIR}/include
