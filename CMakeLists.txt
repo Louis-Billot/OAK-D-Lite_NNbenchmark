@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.20) # For Hunter
 
-project(ColorCam_Preview)
+project(project)
 
 # add_subdirectory(src)
+
+set(APP_NAME "DepthAI_BLOB_benchmark")
 
 set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/../GitHub/opencv/build;$ENV{DEPTHAI_DIR}")
 # set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/build;$ENV{DEPTHAI_DIR}")
@@ -31,14 +33,14 @@ message( STATUS "Found DepthAI-OpenCV Lib ! " (${DEPTHAI_OPENCV_LIB}))
 
 find_package( OpenCV REQUIRED )
 
-add_executable(DepthAI_TEST host_decoding/main.cpp)
+add_executable(${APP_NAME} host_decoding/main.cpp)
 # add_executable(DepthAI_TEST host_decoding/test.cpp)
 
-target_include_directories(DepthAI_TEST PRIVATE
+target_include_directories(${APP_NAME} PRIVATE
 	$ENV{DEPTHAI_DIR}/include
 	$ENV{DEPTHAI_DIR}/include/depthai-shared/3rdparty
 	$ENV{DEPTHAI_DIR}/lib/cmake/depthai/dependencies/include
 	${OpenCV_INCLUDE_DIRS}
 	)
 
-target_link_libraries( DepthAI_TEST PRIVATE ${OpenCV_LIBS} ${DEPTHAI_OPENCV_LIB} ${DEPTHAI_CORE_LIB} )
+target_link_libraries( ${APP_NAME} PRIVATE ${OpenCV_LIBS} ${DEPTHAI_OPENCV_LIB} ${DEPTHAI_CORE_LIB} )
