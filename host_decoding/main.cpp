@@ -35,30 +35,31 @@ int main(int argc, char** argv) {
     // string nnPath(BLOB_PATH);
     string nnPath;
 
+    std::fstream fs;
+    // vector<directory_entry> files_list;
+    vector<string> files_list;
+
     // If path to blob specified, use that
     if(argc > 1) {
-        nnPath = std::string(argv[1]);
+        files_list.push_back(string(argv[1]));
     }
-    else return 1;
-
-    string path = "c:/depthai_blob_files/test_dir/";
-
-    std::fstream fs;
-    fs.open (path + "test.txt", std::fstream::out | std::fstream::trunc);
-
-    vector<directory_entry> files_list;
-
-    for (const auto & file : directory_iterator(path))
+    else
     {
-        if (file.is_regular_file() && file.path().extension() == ".blob")
-            files_list.push_back(file);
-        cout << file.path().extension() << endl;
+        string path = "c:/depthai_blob_files/test_dir/";
+
+        fs.open(path + "test.txt", std::fstream::out | std::fstream::trunc);
+
+        for (const auto & file : directory_iterator(path))
+        {
+            if (file.is_regular_file() && file.path().extension() == ".blob")
+                files_list.push_back(file.path().string());
+            cout << file.path().extension() << endl;
+        }
     }
 
     for (const auto filepath : files_list)
     {
-        cout << filepath.is_regular_file() << filepath.path() << endl;
-        nnPath = filepath.path().string();
+        nnPath = filepath;
         
 
         // Print which blob we are using
@@ -222,7 +223,8 @@ int main(int argc, char** argv) {
 
     }
 
-    fs.close();
+    if (fs.is_open())
+        fs.close();
 
     return 0;
 }
