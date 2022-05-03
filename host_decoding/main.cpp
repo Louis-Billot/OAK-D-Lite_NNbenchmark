@@ -140,32 +140,6 @@ int main(int argc, char** argv) {
         auto color2 = cv::Scalar(255, 255, 255);
         float duration_loop = 60;
 
-        // Add bounding boxes and text to the frame and show it to the user
-        auto displayFrame = [](std::string name, cv::Mat frame, vector<dai::ImgDetection>& detections) {
-        // auto displayFrame = [](std::string name, cv::Mat frame, vector<float>& detections) {
-            auto color = cv::Scalar(255, 0, 0);
-            // nn data, being the bounding box locations, are in <0..1> range - they need to be normalized with frame width/height
-            for(auto& detection : detections) {
-                int x1 = detection.xmin * frame.cols;
-                int y1 = detection.ymin * frame.rows;
-                int x2 = detection.xmax * frame.cols;
-                int y2 = detection.ymax * frame.rows;
-
-                uint32_t labelIndex = detection.label;
-                std::string labelStr = to_string(labelIndex);
-                if(labelIndex < labelMap.size()) {
-                    labelStr = labelMap[labelIndex];
-                }
-                cv::putText(frame, labelStr, cv::Point(x1 + 10, y1 + 20), cv::FONT_HERSHEY_TRIPLEX, 0.5, 255);
-                std::stringstream confStr;
-                confStr << std::fixed << std::setprecision(2) << detection.confidence * 100;
-                cv::putText(frame, confStr.str(), cv::Point(x1 + 10, y1 + 40), cv::FONT_HERSHEY_TRIPLEX, 0.5, 255);
-                cv::rectangle(frame, cv::Rect(cv::Point(x1, y1), cv::Point(x2, y2)), color, cv::FONT_HERSHEY_SIMPLEX);
-            }
-            // Show the frame
-            cv::imshow(name, frame);
-        };
-
         startTime_loop = steady_clock::now();
 
         // while(true) {
@@ -204,7 +178,6 @@ int main(int argc, char** argv) {
             }
 
             if(!frame.empty()) {
-                // displayFrame("rgb", frame, detections);
                 cv::imshow("rgb", frame);
             }
 
