@@ -90,7 +90,8 @@ int main(int argc, char** argv) {
         nnOut->setStreamName("nn");
 
         // Properties
-        camRgb->setPreviewSize(nn_shape, nn_shape);
+        camRgb->setPreviewSize(129, 97);
+        // camRgb->setPreviewSize(nn_shape, nn_shape);
         camRgb->setBoardSocket(dai::CameraBoardSocket::RGB);
         camRgb->setResolution(dai::ColorCameraProperties::SensorResolution::THE_1080_P);
         camRgb->setInterleaved(false);
