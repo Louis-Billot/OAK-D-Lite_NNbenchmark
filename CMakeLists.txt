@@ -6,7 +6,7 @@ project(project)
 
 set(APP_NAME "DepthAI_BLOB_benchmark")
 
-set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/../GitHub/opencv/build;$ENV{DEPTHAI_DIR};$ENV{DEPTHAI_DIR}/lib/cmake/depthai/dependencies")
+set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/../GitHub/opencv/build;$ENV{DEPTHAI_DIR}")
 # set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/../GitHub/opencv/build;$ENV{DEPTHAI_DIR2}")
 # set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/build;$ENV{DEPTHAI_DIR}")
 
@@ -21,7 +21,6 @@ add_definitions( -DXLINK_USE_MX_ID_NAME=ON -D__PC__=ON)
 
 find_library(DEPTHAI_CORE_LIB NAMES depthai-core NO_CACHE )
 find_library(DEPTHAI_OPENCV_LIB NAMES depthai-opencv NO_CACHE )
-find_library(DEPTHAI_USB_LIB NAMES usb-1.0 NO_CACHE )
 
 if ( NOT DEPTHAI_CORE_LIB )
 	message( FATAL_ERROR "ERROR DepthAI-Core Lib NOT FOUND !")
@@ -33,11 +32,6 @@ if ( NOT DEPTHAI_OPENCV_LIB )
 endif( NOT DEPTHAI_OPENCV_LIB)
 message( STATUS "Found DepthAI-OpenCV Lib ! " (${DEPTHAI_OPENCV_LIB}))
 
-if ( NOT DEPTHAI_USB_LIB )
-	message( FATAL_ERROR "ERROR DepthAI-USB Lib NOT FOUND !")
-endif( NOT DEPTHAI_USB_LIB)
-message( STATUS "Found DepthAI-USB Lib ! " (${DEPTHAI_USB_LIB}))
-
 find_package( OpenCV REQUIRED )
 
 # add_executable(${APP_NAME} host_decoding/main.cpp)
@@ -45,12 +39,12 @@ find_package( OpenCV REQUIRED )
 add_executable(${APP_NAME} host_decoding/test2.cpp)
 
 target_include_directories(${APP_NAME} PRIVATE
-	$ENV{DEPTHAI_DIR2}/include
-	$ENV{DEPTHAI_DIR2}/include/depthai-shared/3rdparty
-	$ENV{DEPTHAI_DIR2}/lib/cmake/depthai/dependencies/include
-	# $ENV{DEPTHAI_DIR}/include
-	# $ENV{DEPTHAI_DIR}/include/depthai-shared/3rdparty
-	# $ENV{DEPTHAI_DIR}/lib/cmake/depthai/dependencies/include
+	# $ENV{DEPTHAI_DIR2}/include
+	# $ENV{DEPTHAI_DIR2}/include/depthai-shared/3rdparty
+	# $ENV{DEPTHAI_DIR2}/lib/cmake/depthai/dependencies/include
+	$ENV{DEPTHAI_DIR}/include
+	$ENV{DEPTHAI_DIR}/include/depthai-shared/3rdparty
+	$ENV{DEPTHAI_DIR}/lib/cmake/depthai/dependencies/include
 	${OpenCV_INCLUDE_DIRS}
 	)
 
