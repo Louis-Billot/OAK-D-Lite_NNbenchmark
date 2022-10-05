@@ -6,7 +6,7 @@ project(project)
 
 set(APP_NAME "DepthAI_BLOB_benchmark")
 
-set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/../GitHub/opencv/build;$ENV{DEPTHAI_DIR}")
+set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/../../GitHub/opencv/build;$ENV{DEPTHAI_DIR}")
 # set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/../GitHub/opencv/build;$ENV{DEPTHAI_DIR2}")
 # set(CMAKE_PREFIX_PATH "$ENV{OPENCV_DIR}/build;$ENV{DEPTHAI_DIR}")
 
@@ -34,9 +34,9 @@ message( STATUS "Found DepthAI-OpenCV Lib ! " (${DEPTHAI_OPENCV_LIB}))
 
 find_package( OpenCV REQUIRED )
 
-# add_executable(${APP_NAME} host_decoding/main.cpp)
+add_executable(${APP_NAME} host_decoding/main.cpp)
 # add_executable(${APP_NAME} host_decoding/test.cpp)
-add_executable(${APP_NAME} host_decoding/test2.cpp)
+# add_executable(${APP_NAME} host_decoding/test2.cpp)
 
 target_include_directories(${APP_NAME} PRIVATE
 	# $ENV{DEPTHAI_DIR2}/include

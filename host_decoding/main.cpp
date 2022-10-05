@@ -66,7 +66,8 @@ int main(int argc, char** argv) {
         printf("Using blob at path: %s\n", nnPath.c_str());
         fs << nnPath << endl;
 
-        const uint16_t nn_shape = 640;
+        const uint16_t nn_shape = 417;
+        // const uint16_t nn_shape = 640;
 
         const auto output_shape = int(3 * (pow((nn_shape/8.0), 2) + pow((nn_shape/16.0), 2) + pow((nn_shape/32.0), 2)));
 
@@ -90,13 +91,14 @@ int main(int argc, char** argv) {
         nnOut->setStreamName("nn");
 
         // Properties
-        camRgb->setPreviewSize(129, 97);
-        // camRgb->setPreviewSize(nn_shape, nn_shape);
+        // camRgb->setPreviewSize(129, 97);
+        camRgb->setPreviewSize(nn_shape, nn_shape);
         camRgb->setBoardSocket(dai::CameraBoardSocket::RGB);
         camRgb->setResolution(dai::ColorCameraProperties::SensorResolution::THE_1080_P);
         camRgb->setInterleaved(false);
         camRgb->setColorOrder(dai::ColorCameraProperties::ColorOrder::BGR);
-        camRgb->setFps(30);
+        // camRgb->setFps(30);
+        camRgb->setFps(60);
 
         // Linking
         camRgb->preview.link(detectionNetwork->input);
@@ -132,7 +134,12 @@ int main(int argc, char** argv) {
 
         cv::Mat frame;
         // vector<dai::ImgDetection> detections;
-        vector<float> output;
+        vector<float> output, output2, output3;
+
+        cv::namedWindow("rgb", cv::WINDOW_NORMAL);
+        cv::resizeWindow("rgb", cv::Size(nn_shape, nn_shape));
+        // cv::resizeWindow("rgb", cv::Size(2*129, 2*97));
+
         auto startTime = steady_clock::now();
         int counter = 0;
         auto startTime_loop = startTime;
@@ -174,8 +181,11 @@ int main(int argc, char** argv) {
             }
 
             if(inNN) {
-                output = inNN->getLayerFp16("output");
-                // cout << output.size() << endl;
+                output = inNN->getLayerFp16("cif");
+                output2 = inNN->getLayerFp16("caf");
+                // output3 = inNN->getLayerFp16("710");
+                // cout << output.size() << " " << output2.size() << " " << output3.size() << endl;
+                cout << output[0] << " " << output2[0] /*<< " " << output3[0]*/ << endl;
             }
 
             if(!frame.empty()) {
@@ -184,6 +194,18 @@ int main(int argc, char** argv) {
 
             int key = cv::waitKey(1);
             if(key == 'q' || key == 'Q') {
+
+                // for (auto item : output){
+                //     cout << item << " ";
+                // }
+                // cout << endl;
+                // for (auto item : output2){
+                //     cout << item << " ";
+                // }
+                // cout << endl;
+                // for (auto item : output3){
+                //     cout << item << " ";
+                // }
                 break;
                 // return 0;
             }
